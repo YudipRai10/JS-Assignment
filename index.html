@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="kanban">
+      <header>
+        <h1>Kanban Board</h1>
+        <form id="todo-form">
+          <input type="text" placeholder="Add Todo..." id="todo-input" />
+          <button type="submit" class="submitBtn">Add</button>
+        </form>
+      </header>
+
+      <div class="columns">
+        <div class="column" id="todo-column">
+          <h3 class="heading">
+            To-do <span class="count" id="todo-count"></span>
+          </h3>
+        </div>
+
+        <div class="column" id="doing-column">
+          <h3 class="heading">
+            Doing <span class="count" id="doing-count"></span>
+          </h3>
+        </div>
+
+        <div class="column" id="done-column">
+          <h3 class="heading">
+            Done <span class="count" id="done-count"></span>
+          </h3>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="dist/todo.js"></script>
+    <script type="module" src="dist/drag.js"></script>
+  </body>
+</html>
