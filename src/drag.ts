@@ -1,20 +1,12 @@
-import { addDragEvent, updateTaskCounts } from "./utils.js";
+import { saveTaskToLocalStorage } from "./todo.js";
+import { updateTaskCounts } from "./utils.js";
 
-const draggables = document.querySelectorAll(
-  ".task"
-) as NodeListOf<HTMLElement>;
-const droppables = document.querySelectorAll(
+const dropZones = document.querySelectorAll(
   ".column"
 ) as NodeListOf<HTMLElement>;
 
-// add class name and for styles while dragging
-draggables.forEach((task) => {
-  addDragEvent(task);
-});
-
-droppables.forEach((column) => {
-  let dropZone = column as HTMLElement;
-  dropZone.addEventListener("dragover", (e: DragEvent) => {
+dropZones.forEach((column: HTMLElement) => {
+  column.addEventListener("dragover", (e: DragEvent) => {
     e.preventDefault(); // allow dropping
 
     const currentTask = document.querySelector(
@@ -22,24 +14,27 @@ droppables.forEach((column) => {
     ) as HTMLElement | null; // current task that is being dragged
     if (!currentTask) return;
 
-    const bottomTask = insertAboveTask(dropZone, e.clientY);
+    const bottomTask = insertAboveTask(column, e.clientY);
     bottomTask
       ? column.insertBefore(currentTask, bottomTask)
       : column.appendChild(currentTask);
 
     updateTaskCounts();
+    saveTaskToLocalStorage();
   });
 });
 
-const insertAboveTask = (zone: HTMLElement, mouseY: number) => {
-  const elements = zone.querySelectorAll(
+// Helper function to return task below the mouse pointer
+const insertAboveTask = (column: HTMLElement, mouseY: number) => {
+  const tasks = column.querySelectorAll(
     ".task:not(.is-dragging)"
   ) as NodeListOf<HTMLElement>; // select all tasks except the dragged task
 
   let closestTask: HTMLElement | null = null;
-  let closestOffSet = Number.NEGATIVE_INFINITY;
+  let closestOffSet = Number.NEGATIVE_INFINITY; // safe starting point
 
-  elements.forEach((task) => {
+  // find the task with offset closest to 0
+  tasks.forEach((task) => {
     const { top } = task.getBoundingClientRect();
     const offset = mouseY - top;
 

@@ -12,19 +12,21 @@ const submitBtn = document.querySelector(".submitBtn") as HTMLElement;
 
 let editTask: HTMLElement | null = null;
 
+getTaskFromLocalStorage();
 updateTaskCounts();
 
+// Form submission
 form.addEventListener("submit", (e: SubmitEvent) => {
   e.preventDefault();
 
   const value = input.value.trim();
-  if (value === "") return;
+  if (value === "") return; //exit if no input value
 
   if (editTask) {
     updateTask(editTask, value);
     input.blur();
   } else {
-    createNewTask(value);
+    renderNewTask(value);
   }
 
   resetForm();
@@ -34,9 +36,11 @@ form.addEventListener("submit", (e: SubmitEvent) => {
 function updateTask(task: HTMLElement | null, value: string) {
   if (!task) return;
   const span = task.querySelector("span") as HTMLSpanElement;
-  if (span) span.textContent = value;
+  if (span) span.textContent = value; // edit and set the input value
+  saveTaskToLocalStorage();
 }
 
+// helper function to create new task UI
 function createTaskElement(value: string): HTMLElement {
   const newTask = document.createElement("div");
   newTask.classList.add("task");
@@ -54,16 +58,19 @@ function createTaskElement(value: string): HTMLElement {
   newTask.appendChild(span);
   newTask.appendChild(btnContainer);
 
+  // add class name and for styles and tracking while dragging
   addDragEvent(newTask);
 
   return newTask;
 }
 
-function createNewTask(value: string) {
+function renderNewTask(value: string) {
   const newTask = createTaskElement(value);
   todoColumn.appendChild(newTask);
+  saveTaskToLocalStorage();
 }
 
+// Helper function create span for text 
 function createSpan(value: string) {
   const span = document.createElement("span");
   span.classList.add("spanText");
@@ -78,6 +85,7 @@ function resetForm() {
   submitBtn.textContent = "Add";
 }
 
+// Create Delete Button
 function renderDeleteBtn(task: HTMLElement) {
   const deleteBtn = document.createElement("button");
   deleteBtn.classList.add("deleteBtn");
@@ -86,15 +94,18 @@ function renderDeleteBtn(task: HTMLElement) {
   `;
 
   deleteBtn.addEventListener("click", () => {
-    const confirmed = confirm("Are you sure you want to delete this task?");
-    if (!confirmed) return;
-    task.remove();
+    const confirmDeletion = confirm("Are you sure you want to delete this task?");
+    if (!confirmDeletion) return;
+
+    task.remove(); // if true
     updateTaskCounts();
+    saveTaskToLocalStorage();
   });
 
   return deleteBtn;
 }
 
+// Create Render Button
 function renderEditBtn(task: HTMLElement) {
   const editBtn = document.createElement("button");
   editBtn.classList.add("editBtn");
@@ -104,13 +115,51 @@ function renderEditBtn(task: HTMLElement) {
 
   editBtn.addEventListener("click", () => {
     const span = task.querySelector("span");
-    if (!task || !span) return;
 
     editTask = task;
-    input.value = span.textContent || "";
+    input.value = span?.textContent || "";
     input.focus();
     submitBtn.textContent = "Update";
   });
 
   return editBtn;
+}
+
+export function saveTaskToLocalStorage() {
+  const allTasks: TaskProps[] = [];
+
+  const columns = document.querySelectorAll(
+    ".column"
+  ) as NodeListOf<HTMLElement>;
+
+  columns.forEach((column) => {
+    const columnId = column.id;
+    const tasks = column.querySelectorAll(
+      ".task span"
+    ) as NodeListOf<HTMLSpanElement>;
+
+    tasks.forEach((task) => {
+      const text = task.textContent || "";
+      if (text) {
+        allTasks.push({ columnId, text });
+      }
+    });
+  });
+
+  localStorage.setItem("kanban", JSON.stringify(allTasks));
+}
+
+function getTaskFromLocalStorage() {
+  const savedTasks = localStorage.getItem("kanban");
+  if (!savedTasks) return;
+
+  const oldTasks = JSON.parse(savedTasks);
+
+  oldTasks.forEach((task: TaskProps) => {
+    const column = document.getElementById(task.columnId);
+    if (column) {
+      const renderTask = createTaskElement(task.text);
+      column.appendChild(renderTask);
+    }
+  });
 }

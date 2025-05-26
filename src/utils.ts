@@ -7,6 +7,7 @@ export function addDragEvent(task: HTMLElement) {
   });
 }
 
+
 export function updateTaskCounts() {
   const columns = ["todo", "doing", "done"];
 
