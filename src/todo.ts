@@ -6,7 +6,7 @@ import {
 } from "./utils.js";
 
 interface TaskProps {
-  text: string;
+  value: string;
   columnId: string;
 }
 
@@ -58,7 +58,6 @@ function resetForm() {
   submitBtn.textContent = "Add";
 }
 
-
 function renderDeleteBtn(task: HTMLElement) {
   const deleteBtn = createDeleteBtn();
 
@@ -76,7 +75,6 @@ function renderDeleteBtn(task: HTMLElement) {
 
   return deleteBtn;
 }
-
 
 function renderEditBtn(task: HTMLElement) {
   const editBtn = createEditBtn();
@@ -108,9 +106,9 @@ export function saveTaskToLocalStorage() {
     ) as NodeListOf<HTMLSpanElement>;
 
     tasks.forEach((task) => {
-      const text = task.textContent || "";
-      if (text) {
-        allTasks.push({ columnId, text });
+      const value = task.textContent || "";
+      if (value) {
+        allTasks.push({ columnId, value });
       }
     });
   });
@@ -122,13 +120,13 @@ export function getTaskFromLocalStorage() {
   const savedTasks = localStorage.getItem("kanban");
   if (!savedTasks) return;
 
-  const oldTasks = JSON.parse(savedTasks);
+  const oldTasks: TaskProps[] = JSON.parse(savedTasks);
 
-  oldTasks.forEach(({ columnId, text }: TaskProps) => {
+  oldTasks.forEach(({ columnId, value }: TaskProps) => {
     const column = document.getElementById(columnId);
     if (column) {
       const renderTask = createTaskElement({
-        value: text,
+        value,
         renderDeleteBtn,
         renderEditBtn,
       });

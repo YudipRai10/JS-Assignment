@@ -73,9 +73,9 @@ export function saveTaskToLocalStorage() {
         const columnId = column.id;
         const tasks = column.querySelectorAll(".task span");
         tasks.forEach((task) => {
-            const text = task.textContent || "";
-            if (text) {
-                allTasks.push({ columnId, text });
+            const value = task.textContent || "";
+            if (value) {
+                allTasks.push({ columnId, value });
             }
         });
     });
@@ -86,11 +86,11 @@ export function getTaskFromLocalStorage() {
     if (!savedTasks)
         return;
     const oldTasks = JSON.parse(savedTasks);
-    oldTasks.forEach(({ columnId, text }) => {
+    oldTasks.forEach(({ columnId, value }) => {
         const column = document.getElementById(columnId);
         if (column) {
             const renderTask = createTaskElement({
-                value: text,
+                value,
                 renderDeleteBtn,
                 renderEditBtn,
             });
