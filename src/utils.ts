@@ -45,7 +45,7 @@ export function createTaskElement({
 export function createSpan(value: string) {
   const span = document.createElement("span");
   span.classList.add("spanText");
-  span.textContent = value;
+  span.textContent = value.trim();
 
   return span;
 }
