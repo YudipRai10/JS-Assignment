@@ -1,3 +1,4 @@
+import { saveTaskToLocalStorage } from "./todo.js";
 import { insertAboveTask, updateTaskCounts } from "./utils.js";
 
 const dropZones = document.querySelectorAll(
@@ -22,5 +23,3 @@ dropZones.forEach((column: HTMLElement) => {
     saveTaskToLocalStorage();
   });
 });
-
-

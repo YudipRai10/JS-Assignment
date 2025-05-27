@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+HU:wght@100..400&display=swap");
+
 * {
   padding: 0;
   margin: 0;
@@ -72,11 +74,12 @@ header h1 {
 }
 
 .heading {
-  font-size: 22px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
+  font-family: "Dancing Script";
 }
 
 .heading span {
@@ -89,6 +92,7 @@ header h1 {
   color: white;
   border-radius: 50%;
   line-height: 1.8rem;
+  font-family: "Poppins";
 }
 
 .column {
@@ -100,9 +104,8 @@ header h1 {
   padding: 12px;
   border-radius: 4px;
   width: 400px;
-  max-height: 500px;
+  height: 100%;
   flex-shrink: 0;
-  overflow-y: scroll;
 }
 
 .column::-webkit-scrollbar {
@@ -119,6 +122,7 @@ header h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: all 0.3s ease;
 }
 
 .spanText {
@@ -144,6 +148,7 @@ header h1 {
   transform: scale(1.05);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
 }
+
 
 .deleteBtn,
 .editBtn {
